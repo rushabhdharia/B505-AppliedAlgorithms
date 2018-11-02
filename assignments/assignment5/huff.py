@@ -1,14 +1,35 @@
 #!/usr/bin/env python3
 from string import ascii_lowercase
 import heapq
-#from queue import PriorityQueue
+
+class Node:
+	def __init__(self):
+		self.left = None
+		self.right = None
+		self.freq = None
+		pass
+
+	#def __lt__(self, other):
+	#	return self.freq < other.freq  #given that self.freq contains the frequency of your character
 
 def traverseTree(node, bit):
-	if node.left is null and node.right is null:	# if this is leaf node
-		print node.char, bit			# print code (or save it somewhere else)
+	#print("here")
+	if node[1].left is None and node[1].right is None:	# if this is leaf node
+		print (node[1].char, bit)			# print code (or save it somewhere else)
 	else:
-		traverseTree(node.left, bit + '0')	# stick a 0 to the bit and continue down left
-		traverseTree(node.right, bit + '1')	# stick a 1 to the bit and continue down right
+		traverseTree(node[1].left, bit + '0')	# stick a 0 to the bit and continue down left
+		traverseTree(node[1].right, bit + '1')	# stick a 1 to the bit and continue down right
+
+def huffman(Q):
+	while len(Q)>1:
+		new_node = Node()
+		new_node.left = x = heapq.heappop(Q)
+		new_node.right = y = heapq.heappop(Q)
+		freq = x[0] + y[0]
+		heapq.heappush(Q, (freq, new_node))
+
+	return heapq.heappop(Q)
+
 
 def main():
 	chardict = {}
@@ -40,20 +61,16 @@ def main():
 	file.close()
 	print(chardict)	
 
-	# Q = PriorityQueue()
-	# for c in char_list:
-	# 	Q.put(chardict[c], c)
-
-	# while Q.qsize()>0:
-	# 	print(Q.get())
-
 	Q = []					# create empty queue
-	for c in char_list:				# for each character c in your character set:
-		heapq.heappush(Q, (chardict[c], c))	# push tuple of "(frequency, char)" onto queue, so that they get keyed on the frequency
-
-	while len(Q)>0:
-		print(heapq.heappop(Q))
-
+	for c in char_list:			# for each character c in your character set:
+		my_node = Node()		# create new node
+		my_node.char = c		# assign c to char attribute of the node
+		my_node.freq = chardict[c]
+		heapq.heappush(Q, (chardict[c], my_node))	# push tuple of "(frequency, node)" onto queue, so that they get keyed on the frequency	
+	
+			
+	node1 =	huffman(Q)
+	traverseTree(node1, "")
 	pass
 
 if __name__ == '__main__':
