@@ -56,15 +56,15 @@ def main():
 	for character in char_list:
 		chardict[character] = 0
 
-	#file = open("The Adventures of Sherlock Holmes.txt")
-	file = open("test.txt")
+	file = open("The Adventures of Sherlock Holmes.txt")
+	#file = open("test.txt")
 	while True:
 		c = file.read(1)
 		if not c:
 			break
-		total_char += 1
 		if c in char_list:
-			chardict[c] += 1	
+			chardict[c] += 1
+			total_char += 1	
 	file.close()	
 
 	Q = []					# create empty queue
@@ -90,8 +90,8 @@ def main():
 	print("Using a 5-bit fixed length encoding, this would have been", total_length, "long")
 	print("So we saved", saved_bits,"bits!")
 
-	#print(globaldict)
 	pass
 
 if __name__ == '__main__':
 	main()
+
