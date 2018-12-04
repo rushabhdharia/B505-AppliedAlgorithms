@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-import math
 dict_of_nodes = {} 
 
-def is_bipartite(G):
-	for u in range(len(G)):
-		for v in G[u]:
-			if dict_of_nodes[u+1]['color'] == dict_of_nodes[v]['color']:
+#We traverse through the whole adjacency list and check if any two neighbors have the same color. If any two neighbors have the same color then the graph is not bipartite, else it is bipartite.
+def is_bipartite():
+	for u in dict_of_nodes:
+		for v in dict_of_nodes[u]['adjacency_list']:
+			if dict_of_nodes[u]['color'] == dict_of_nodes[v]['color']:
 				return 0
 	return 1
 
-def DFS(G):
+# Normal DFS function with the only modification that it colors the node and it's predecessor with different colors.
+def DFS():
 	global dict_of_nodes
 	color = "RED"
 	stack = []
@@ -27,46 +28,65 @@ def DFS(G):
 				else:
 					color = "RED"
 			dict_of_nodes[u]['color'] = color
-			for v in G[u-1]:
+			for v in dict_of_nodes[u]['adjacency_list']:
 				if dict_of_nodes[v]['color'] == "WHITE":
 					dict_of_nodes[v]['pre'] = u
 					stack.append(v)
 
 def main():
-	global dict_of_nodes
+	global dict_of_nodes # to store all the nodes with their color, predecessor and neighbors
 
-	file = open("bipartite.txt")
+	#input file
+	file = open("bipartite.txt") 
 	# file = open("bipartite2.txt")
 	# file = open("not_bipartite.txt")
 	# file = open("not_bipartite2.txt")
+	# file = open("test.txt")
 	
-	adjacency_list = []
+
 	n = int(file.readline())
-	
-	for i in range(0,n):
-		adjacency_list.append([])
-		x = i+1
-		dict_of_nodes[x] = {}
-		dict_of_nodes[x]['color'] = "WHITE"
-		dict_of_nodes[x]['pre'] = "NIL"
 
+	# Read the file line by line 
 	for line in file:
-		check = 0
+		check = 0 # to determine if its the first or second number
+		num = line.split(',') 
+		num1 = '' # stores the first node
+		num2 = '' # stores the second node
 		
-		for x in line:
-			if x.isdigit():
-				if check == 0:
-					a = int(x)
-				else:
-					b = int(x)
-				check += 1	
+		for y in num:
+			for x in y:
+				if x.isdigit():
+					if check == 0:
+						num1 += x
+					else:
+						num2 += x
+			check += 1	
 
-		adjacency_list[a-1].append(b)
-		adjacency_list[b-1].append(a)
+		a=int(num1)
+		b=int(num2)
 
-	DFS(adjacency_list)
 
-	if is_bipartite(adjacency_list):
+		# Check if a number is present in the dictionary. If it's not present add it to the dictionary and set its color to white, predecessor to NIL and make an empty neighbors list.
+		if a not in dict_of_nodes:
+			dict_of_nodes[a] = {}
+			dict_of_nodes[a]['color'] = "WHITE"
+			dict_of_nodes[a]['pre'] = "NIL"
+			dict_of_nodes[a]['adjacency_list'] = []
+
+		if b not in dict_of_nodes:
+			dict_of_nodes[b] = {}
+			dict_of_nodes[b]['color'] = "WHITE"
+			dict_of_nodes[b]['pre'] = "NIL"
+			dict_of_nodes[b]['adjacency_list'] = []
+
+		# Add the other node to the node's neighbor list
+		dict_of_nodes[a]['adjacency_list'].append(b)
+		dict_of_nodes[b]['adjacency_list'].append(a)
+
+	# Call the function to color the graph
+	DFS()
+
+	if is_bipartite():
 		print("Graph is Bipartite")
 	else:
 		print("Graph is not Bipartite")
